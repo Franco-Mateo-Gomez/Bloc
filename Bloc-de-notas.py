@@ -11,9 +11,175 @@ from PyQt5.QtGui import QIcon
 import sys
 import os
 #------------#
+
+#------------------------------------------FUNCIONES-------------------------------------------#
+#-------FUNCIÓN: RUTA DE GUARDADO DE ARCHIVOS
+def funcion_guardar_archivo(self):
+    texto_a_guardar=self.texto.toPlainText()#GUARDAR EL CONTENIDO DEL CAMPO DE TEXTO EN UNA var.
+
+    directorio_a_guardar=QFileDialog.getSaveFileName(self,"Guardar archivo","C:/","*.txt")
+    # MOSTRAR AL USUARIO UNA VENTANA DONDE PODRÁ ELEGIR LA RUTA DE DESTINO (Por defecto se mostrará a partir de la raiz del SO y utilizará la extensión .txt)
+    #Tomar en cuenta: la var.(directorio_a_guardar) es una tupla. La posición relevante es [0]
+    
+    if(os.path.exists(directorio_a_guardar[0])!=True):# SI LA RUTA DE DESTINO NO EXISTE
+        guardar_archivo=open(directorio_a_guardar[0],"w")#CREAR UN ARCHIVO DE ESCRITURA CON LA RUTA
+        guardar_archivo.write(texto_a_guardar)#AGREGAR EL CONTENIDO DEL CAMPO DE TEXTO AL ARCHIVO
+        guardar_archivo.close()               #CERRAR EL ARCHIVO
+    #---                                                                                    ---#
+    else:                                             # SI LA RUTA DE DESTINO YA EXISTE
+        guardar_archivo=open(directorio_a_guardar[0],"a")#CREAR UN ARCHIVO QUE AGREGUE NUEVA INFORMACIÓN EN LA RUTA ESPECIFICADA (esto quiere decir que no se eliminará el contenido guardado anteriormente)
+        guardar_archivo.write(texto_a_guardar)#AGREGAR EL CONTENIDO DEL CAMPO DE TEXTO AL ARCHIVO
+        guardar_archivo.close()               #CERRAR EL ARCHIVO
+#--------------------------------------------
+
+#-------FUNCIÓN: RUTA DE APERTURA DE ARCHIVOS
+def funcion_abrir_archivo(self):
+    seleccionar_archivo,_=QFileDialog.getOpenFileName(self,"Abrir archivo","C:/","*.txt")
+    # MOSTRAR AL USUARIO UNA VENTANA DONDE PODRÁ ELEGIR LA RUTA DONDE SE ALOJA EL ARCHIVO DESEADO (Por defecto se mostrará a partir de la raiz del SO y utilizará la extensión .txt)
+    #Tomar en cuenta: la var.(seleccionar_archivo) es una tupla. La posición relevante es [0]
+
+    if (seleccionar_archivo):                           #SI SE SELECCIONA UNA RUTA
+            abrir_archivo=open(seleccionar_archivo,"r")#CREAR UN ARCHIVO DE LECTURA CON LA RUTA
+            contenido=abrir_archivo.read()              #LEER EL CONTENIDO DEL ARCHIVO
+            self.texto.setText(contenido)               #AGREGARLO EN EL CAMPO DE TEXTO
+            abrir_archivo.close()                       #CERRAR EL ARCHIVO
+#--------------------------------------------
+
+#------FUNCIÓN: MENSAJE DE ADVERTENCIA POR CONTENIDO DE ARCHIVOS (botón NUEVO)
+def funcion_nuevo_advertencia_hay_contenido(self):
+    #____________________________MENSAJE DE ADVERTENCIA________________________________#
+    mensaje_existente=QMessageBox()                 #CUADRO DE DIÁLOGO
+    mensaje_existente.setIcon(QMessageBox.Warning)  #ESTABLECER UN ÍCONO DE ADVERTENCIA
+    mensaje_existente.setWindowIcon(QIcon(str("Images/icon.png")))#AGREGAR ÍCONO
+    
+    mensaje_existente.setWindowTitle("Nuevo")       #PONER TÍTULO DE VENTANA AL CUADRO
+    mensaje_existente.setText("Hay contenido en el campo")#INDICAR UN MENSAJE
+    mensaje_existente.setInformativeText("¿Guardar archivo?")#INFORMAR AL USUARIO QUE ACCIÓN DESEA REALIZAR
+
+    mensaje_existente.setStandardButtons(QMessageBox.Ok | QMessageBox.No)#ESTABLECER BOTONES AL CUADRO DE DIÁLOGO (OK,NO)
+    mensaje_existente.setDefaultButton(QMessageBox.Ok)  #AGREGAR POR DEFECTO EL BOTÓN.ok
+
+    salida_mensaje=mensaje_existente.exec_()            #EJECUTA LA VENTANA
+    #__________________________________________________________________________________#
+    #--CONDICIONALES EN CASO DE PULSACIÓN DE BOTONES--#
+    if (salida_mensaje==QMessageBox.Ok):    #SI EL BOTÓN ES (si)
+        funcion_guardar_archivo(self)       #LLAMAR A LA FUNCIÓN QUE GUARDA EL ARCHIVO
+        self.texto.clear()                  #VACIAR EL CONTENIDO DEL CAMPO DE TEXTO
+
+    elif (salida_mensaje==QMessageBox.No):  #SI EL BOTÓN ES (no)
+        self.texto.clear()                  #VACIAR EL CONTENIDO DEL CAMPO DE TEXTO
+#--------------------------------------------
+        
+#------FUNCIÓN: MENSAJE DE ADVERTENCIA POR CONTENIDO DE ARCHIVOS (botón ABRIR)
+def funcion_abrir_advertencia_hay_contenido(self):
+    #____________________________MENSAJE DE ADVERTENCIA________________________________#
+    mensaje_existente=QMessageBox()                 #CUADRO DE DIÁLOGO
+    mensaje_existente.setIcon(QMessageBox.Warning)  #ESTABLECER UN ÍCONO DE ADVERTENCIA
+    mensaje_existente.setWindowIcon(QIcon(str("Images/icon.png")))#AGREGAR ÍCONO
+    
+    mensaje_existente.setWindowTitle("Abrir")       #PONER TÍTULO DE VENTANA AL CUADRO
+    mensaje_existente.setText("Hay contenido en el campo")#INDICAR UN MENSAJE
+    mensaje_existente.setInformativeText("¿Guardar archivo de todas formas?")#INFORMAR AL USUARIO QUE ACCIÓN DESEA REALIZAR
+
+    mensaje_existente.setStandardButtons(QMessageBox.Ok | QMessageBox.No)#ESTABLECER BOTONES AL CUADRO DE DIÁLOGO (OK,NO)
+    mensaje_existente.setDefaultButton(QMessageBox.Ok)  #AGREGAR POR DEFECTO EL BOTÓN.ok
+
+    salida_mensaje=mensaje_existente.exec_()            #EJECUTA LA VENTANA
+    #__________________________________________________________________________________#
+    #--CONDICIONALES EN CASO DE PULSACIÓN DE BOTONES--#
+    if (salida_mensaje==QMessageBox.Ok):    #SI EL BOTÓN ES (si)
+        funcion_guardar_archivo(self)       #LLAMAR A LA FUNCIÓN QUE GUARDA EL ARCHIVO
+        funcion_abrir_archivo(self)         #LUEGO LLAMAR A LA FUNCIÓN QUE ABRE EL ARCHIVO
+    else:
+        self.texto.clear()                  #SINO
+        funcion_abrir_archivo(self)         #LLAMAR A LA FUNCIÓN QUE ABRE EL ARCHIVO
+#--------------------------------------------
+#----------------------------------------------------------------------------------------------#
+
 #-------------------------------CÓDIGO DE VENTANA PRINCIPAL-------------------------------#
 class Ventana_principal(QMainWindow):                 #Heredar desde la función QMainWindow
   
+#____________________EVENTOS DE BOTONES____________________#
+    #--EN CASO DE ELEGIR: NUEVO
+    def click_nuevo(self,e):
+        texto_ingresado=self.texto.toPlainText()         #TOMAR EL CONTENIDO DEL CAMPO DE TEXTO
+
+        if (texto_ingresado !=""):                      #SI EL CONTENIDO NO ESTÁ VACÍO
+            funcion_nuevo_advertencia_hay_contenido(self)   #LLAMAR A LA FUNCIÓN DE ADVERTENCIA PORQUE HAY CONTENIDO EN EL CAMPO DE TEXTO        
+    #--------------------------        
+
+    #--EN CASO DE ELEGIR: GUARDAR
+    def click_guardar(self,e):
+        funcion_guardar_archivo(self)               #LLAMAR A LA FUNCIÓN QUE GUARDA EL ARCHIVO
+    #-------------------------- 
+    
+    #--EN CASO DE ELEGIR: ABRIR
+    def click_abrir(self,e):
+        campo_de_texto=self.texto.toPlainText()     #TOMAR EL CONTENIDO DEL CAMPO DE TEXTO
+
+        if (campo_de_texto==""):                    #SI EL CONTENIDO ESTÁ VACÍO
+            funcion_abrir_archivo(self)             #LLAMAR A LA FUNCIÓN QUE ABRE EL ARCHIVO
+
+        else:                                       #SI EL CONTENIDO NO ESTÁ VACÍO
+            funcion_abrir_advertencia_hay_contenido(self)   #LLAMAR A LA FUNCIÓN DE ADVERTENCIA PORQUE HAY CONTENIDO EN EL CAMPO DE TEXTO        
+    #--------------------------
+    #___________________________________________________________#
+
+    #__________EVENTO QUE DETECTA CONTENIDO VACÍO EN EL CAMPO DE TEXTO__________#
+    #Nos aseguramos de que el usuario no pueda guardar ni crear nuevos archivos vacíos porque sino no tendría sentido#
+    def texto_vacio(self):
+        contenido=self.texto.toPlainText()  #GUARDAR EL CONTENIDO DEL CAMPO DE TEXTO EN UNA var.
+
+        if (contenido==""):            #CONDICIONAL: EN CASO DE QUE NO EXISTAN CARACTERES DENTRO
+            self.boton_nuevo.setEnabled(False)      #DESHABILITAR BOTÓN(nuevo)
+            self.boton_guardar.setEnabled(False)    #DESHABILITAR BOTÓN(guardar)
+
+        else:                           #CONDICIONAL: CUANDO SE DETECTA CONTENIDO
+            self.boton_nuevo.setEnabled(True)       #HABILITAR BOTÓN(nuevo)
+            self.boton_guardar.setEnabled(True)     #HABILITAR BOTÓN(guardar)
+    #___________________________________________________________________________#
+
+    #_______EVENTO QUE CUENTA EL N° DE CARACTERES QUE INGRESA EL USUARIO________#
+    def cuenta_caracteres(self):
+        contenido=self.texto.toPlainText()  #GUARDAR EL CONTENIDO DEL CAMPO DE TEXTO EN UNA var.
+        contenido_sin_espacios=contenido.split()#CONVERTIR EL TEXTO INGRESADO EN UNA LISTA QUE CONTIENE PALABRAS SIN CONTAR LOS ESPACIOS " "
+
+        contador_caracteres=0               #var. ENCARGADA DE CONTAR EL N° DE CARACTERES
+        palabras_recolectadas=""                          #var. ACUMULADOR DE PALABRAS RECORRIDAS
+
+        for indice in contenido_sin_espacios:       #BUCLE: RECORRE CADA PALABRA DE LA LISTA
+            palabras_recolectadas = palabras_recolectadas+indice  #POR CADA VUELTA, CONCATENAR TODAS LAS PALABRAS RECORRIDAS   
+            contador_caracteres=len(palabras_recolectadas)      #GUARDAR LA LONGITUD DE LAS PALABRAS CONCATENADAS EN EL contador_caracteres.
+
+        #EL BUCLE SE REPETIRÁ HASTA QUE EL USUARIO DEJE DE INGRESAR NUEVOS DATOS AL CAMPO DE TEXTO
+
+        num_char=contador_caracteres                   #var. GUARDA EL TOTAL DE N° DE CARACTERES
+        self.etiqueta_contador.setText(str(num_char))  #AGREGAR EL TOTAL EN LA ETIQUETA contador
+    #___________________________________________________________________________#        
+
+    #__________EVENTO: EN CASO DE CIERRE DE LA VENTANA PRINCIPAL__________#
+    def closeEvent(self, e):
+            campo_de_texto=self.texto.toPlainText()     #TOMAR EL CONTENIDO DEL CAMPO DE TEXTO
+
+            if (campo_de_texto!=""):                 #CONDICIONAL: SI EL CONTENIDO NO ESTÁ VACÍO
+                #_________________________MENSAJE DE ADVERTENCIA_______________________________#
+                salida_programa=QMessageBox.question(self, "Ventana de cierre", "Hay contenido \n ¿Estás seguro de abandonar?",QMessageBox.Ok | QMessageBox.No | QMessageBox.Save)
+                #______________________________________________________________________________#
+                #--CONDICIONALES EN CASO DE PULSACIÓN DE BOTONES--#
+                if salida_programa == QMessageBox.Ok:       #SI EL BOTÓN ES (si)           
+                    e.accept()                              #CERRAR EL PROGRAMA
+
+                elif salida_programa == QMessageBox.Save:   #SI EL BOTÓN ES (guardar/save)
+                    funcion_guardar_archivo(self)     #LLAMAR A LA FUNCIÓN QUE GUARDA EL ARCHIVO
+                    e.accept()                              #CERRAR EL PROGRAMA
+
+                else:                                       #SI EL BOTÓN ES (no)
+                    e.ignore()                              #CERRAR ADVERTENCIA
+
+            else:                                    # SI EL CONTENIDO ESTÁ VACÍO
+                e.accept()                           # CERRAR EL PROGRAMA
+    #_____________________________________________________________________#
+    
     #------------------------------FUNCIÓN: VENTANA PRINCIPAL----------------------------------#
     def __init__(self):
         super().__init__()
