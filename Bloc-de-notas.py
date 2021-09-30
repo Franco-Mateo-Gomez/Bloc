@@ -13,6 +13,7 @@ import os
 #------------#
 
 #------------------------------------------FUNCIONES-------------------------------------------#
+
 #-------FUNCIÓN: RUTA DE GUARDADO DE ARCHIVOS
 def funcion_guardar_archivo(self):
     texto_a_guardar=self.texto.toPlainText()#GUARDAR EL CONTENIDO DEL CAMPO DE TEXTO EN UNA var.
@@ -21,15 +22,16 @@ def funcion_guardar_archivo(self):
     # MOSTRAR AL USUARIO UNA VENTANA DONDE PODRÁ ELEGIR LA RUTA DE DESTINO (Por defecto se mostrará a partir de la raiz del SO y utilizará la extensión .txt)
     #Tomar en cuenta: la var.(directorio_a_guardar) es una tupla. La posición relevante es [0]
     
-    if(os.path.exists(directorio_a_guardar[0])!=True):# SI LA RUTA DE DESTINO NO EXISTE
-        guardar_archivo=open(directorio_a_guardar[0],"w")#CREAR UN ARCHIVO DE ESCRITURA CON LA RUTA
-        guardar_archivo.write(texto_a_guardar)#AGREGAR EL CONTENIDO DEL CAMPO DE TEXTO AL ARCHIVO
-        guardar_archivo.close()               #CERRAR EL ARCHIVO
-    #---                                                                                    ---#
-    else:                                             # SI LA RUTA DE DESTINO YA EXISTE
-        guardar_archivo=open(directorio_a_guardar[0],"a")#CREAR UN ARCHIVO QUE AGREGUE NUEVA INFORMACIÓN EN LA RUTA ESPECIFICADA (esto quiere decir que no se eliminará el contenido guardado anteriormente)
-        guardar_archivo.write(texto_a_guardar)#AGREGAR EL CONTENIDO DEL CAMPO DE TEXTO AL ARCHIVO
-        guardar_archivo.close()               #CERRAR EL ARCHIVO
+    if (directorio_a_guardar):
+        if(os.path.exists(directorio_a_guardar[0])!=True):# SI LA RUTA DE DESTINO NO EXISTE
+            guardar_archivo=open(directorio_a_guardar[0],"w")#CREAR UN ARCHIVO DE ESCRITURA CON LA RUTA
+            guardar_archivo.write(texto_a_guardar)#AGREGAR EL CONTENIDO DEL CAMPO DE TEXTO AL ARCHIVO
+            guardar_archivo.close()               #CERRAR EL ARCHIVO
+        #---                                                                                    ---#
+        else:                                             # SI LA RUTA DE DESTINO YA EXISTE
+            guardar_archivo=open(directorio_a_guardar[0],"a")#CREAR UN ARCHIVO QUE AGREGUE NUEVA INFORMACIÓN EN LA RUTA ESPECIFICADA (esto quiere decir que no se eliminará el contenido guardado anteriormente)
+            guardar_archivo.write(texto_a_guardar)#AGREGAR EL CONTENIDO DEL CAMPO DE TEXTO AL ARCHIVO
+            guardar_archivo.close()               #CERRAR EL ARCHIVO
 #--------------------------------------------
 
 #-------FUNCIÓN: RUTA DE APERTURA DE ARCHIVOS
