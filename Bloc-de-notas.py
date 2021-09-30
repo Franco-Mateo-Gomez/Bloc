@@ -179,7 +179,7 @@ class Ventana_principal(QMainWindow):                 #Heredar desde la función
             else:                                    # SI EL CONTENIDO ESTÁ VACÍO
                 e.accept()                           # CERRAR EL PROGRAMA
     #_____________________________________________________________________#
-    
+
     #------------------------------FUNCIÓN: VENTANA PRINCIPAL----------------------------------#
     def __init__(self):
         super().__init__()
@@ -200,17 +200,22 @@ class Ventana_principal(QMainWindow):                 #Heredar desde la función
     def componentes(self):
 
         #COMPONENTES: BOTONES------------------------------------------------------------------#
-        self.boton_nuevo=QPushButton(" Nuevo")                          #CREAR BOTÓN DE NUEVO ARCHIVO
+        self.boton_nuevo=QPushButton(" Nuevo")                     #CREAR BOTÓN DE NUEVO ARCHIVO
         self.boton_nuevo.setEnabled(False)                       #DESACTIVAR COMO ESTADO INICIAL
+        self.boton_nuevo.clicked.connect(self.click_nuevo)      #AGREGAR A LA FUNCIÓN DE EVENTOS
         #                                                                                      #
-        self.boton_guardar=QPushButton(" Guardar")                    #CREAR BOTÓN DE GUARDAR ARCHIVO
+        self.boton_guardar=QPushButton(" Guardar")               #CREAR BOTÓN DE GUARDAR ARCHIVO
         self.boton_guardar.setEnabled(False)                     #DESACTIVAR COMO ESTADO INICIAL
+        self.boton_guardar.clicked.connect(self.click_guardar)   #AGREGAR A LA FUNCIÓN DE EVENTOS
         #                                                                                      #
         boton_abrir=QPushButton(" Abrir")                          #CREAR BOTÓN DE ABRIR ARCHIVO
+        boton_abrir.clicked.connect(self.click_abrir)           #AGREGAR A LA FUNCIÓN DE EVENTOS
         #--------------------------------------------------------------------------------------#
 
         #COMPONENTES: CUADRO DE TEXTO PRINCIPAL------------------------------------------------#
         self.texto=QTextEdit()                                      #CREAR CUADRO DE TEXTO
+        self.texto.textChanged.connect(self.texto_vacio)   #CONECTAR CON EL EVENTO DE TEXTO VACÍO
+        self.texto.textChanged.connect(self.cuenta_caracteres)#CONECTAR CON EL EVENTO ENCARGADO DE CONTAR EL N° DE CARACTERES
         #--------------------------------------------------------------------------------------#
 
         #COMPONENTES: ETIQUETA PARA EL CONTADOR DE CARACTERES----------------#
