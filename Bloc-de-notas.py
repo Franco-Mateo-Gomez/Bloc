@@ -194,6 +194,8 @@ class Ventana_principal(QMainWindow):                 #Heredar desde la función
         #--------------------------------------------------#
         self.setWindowTitle(self.titulo)                       #INSERTAR EL TÍTULO (var:titulo)
         self.componentes()                     #LLAMAR A LA FUNCIÓN DE LOS COMPONENTES (widgets)
+        self.setStyleSheet("background-color:rgb(200,176,130)")        #COLOR DE FONDO
+        self.setWindowIcon(QIcon(str("icono.png")))                  #INSERTAR ÍCONO
     #------------------------------------------------------------------------------------------#
 
     #---FUNCIÓN DE LOS widgets.SE AGREGA (self) indicando que pertenece a la ventana
@@ -203,24 +205,45 @@ class Ventana_principal(QMainWindow):                 #Heredar desde la función
         self.boton_nuevo=QPushButton(" Nuevo")                     #CREAR BOTÓN DE NUEVO ARCHIVO
         self.boton_nuevo.setEnabled(False)                       #DESACTIVAR COMO ESTADO INICIAL
         self.boton_nuevo.clicked.connect(self.click_nuevo)      #AGREGAR A LA FUNCIÓN DE EVENTOS
+        #                             *-_ESTILOS_-*                                                 #
+        self.boton_nuevo.setToolTip("Nuevo archivo")           #DESCRIPCIÓN CUANDO SE ACERCA AL BOTÓN
+        self.boton_nuevo.setIcon(QIcon("nuevo.png"))                       #AGREGAR ÍCONO
+        self.boton_nuevo.setStyleSheet("background-color:rgb(188,70,34)")#COLOR DE FONDO
+        self.boton_nuevo.setFont(QFont("Linux Biolinum G",12))   #AGREGAR FUENTE Y TAMAÑO
         #                                                                                      #
         self.boton_guardar=QPushButton(" Guardar")               #CREAR BOTÓN DE GUARDAR ARCHIVO
         self.boton_guardar.setEnabled(False)                     #DESACTIVAR COMO ESTADO INICIAL
         self.boton_guardar.clicked.connect(self.click_guardar)   #AGREGAR A LA FUNCIÓN DE EVENTOS
+        #                             *-_ESTILOS_-*                                                 #
+        self.boton_guardar.setToolTip("Guardar archivo")       #DESCRIPCIÓN CUANDO SE ACERCA AL BOTÓN
+        self.boton_guardar.setIcon(QIcon("guardar.png"))                    #AGREGAR ÍCONO
+        self.boton_guardar.setStyleSheet("background-color:rgb(188,70,34)")#COLOR DE FONDO
+        self.boton_guardar.setFont(QFont("Linux Biolinum G",12)) #AGREGAR FUENTE Y TAMAÑO 
         #                                                                                      #
         boton_abrir=QPushButton(" Abrir")                          #CREAR BOTÓN DE ABRIR ARCHIVO
         boton_abrir.clicked.connect(self.click_abrir)           #AGREGAR A LA FUNCIÓN DE EVENTOS
+        #                             *-_ESTILOS_-*                                                 #
+        boton_abrir.setIcon(QIcon("abrir.png"))           #DESCRIPCIÓN CUANDO SE ACERCA AL BOTÓN
+        boton_abrir.setToolTip("Abrir archivo existente")            #AGREGAR ÍCONO
+        boton_abrir.setStyleSheet("background-color:rgb(188,70,34)")#COLOR DE FONDO
+        boton_abrir.setFont(QFont("Linux Biolinum G",12))       #AGREGAR FUENTE Y TAMAÑO
         #--------------------------------------------------------------------------------------#
 
         #COMPONENTES: CUADRO DE TEXTO PRINCIPAL------------------------------------------------#
         self.texto=QTextEdit()                                      #CREAR CUADRO DE TEXTO
         self.texto.textChanged.connect(self.texto_vacio)   #CONECTAR CON EL EVENTO DE TEXTO VACÍO
         self.texto.textChanged.connect(self.cuenta_caracteres)#CONECTAR CON EL EVENTO ENCARGADO DE CONTAR EL N° DE CARACTERES
+        #                             *-_ESTILOS_-*                                                 #
+        self.texto.setStyleSheet("background-image:url(fondo.jpg)")         #COLOR DE FONDO
+        self.texto.setFont(QFont("Book Antiqua",12))                #AGREGAR FUENTE Y TAMAÑO
         #--------------------------------------------------------------------------------------#
 
         #COMPONENTES: ETIQUETA PARA EL CONTADOR DE CARACTERES----------------#
         etiqueta_num_caracteres=QLabel("N° de caracteres: ")#CREAR ETIQUETA QUE AGREGA INFORMACIÓN DEL N° DE CARACTERES
         self.etiqueta_contador=QLabel("0")  #CREAR ETIQUETA QUE CUENTA EL N° DE CARACTERES INGRESADOS POR EL USUARIO. (El valor 0 cambiará por otro valor a medida que el usuario ingrese nuevos caracteres)
+        #                             *-_ESTILOS_-*                                                 #
+        etiqueta_num_caracteres.setFont(QFont("Linux Biolinum G",12))   #AGREGAR FUENTE Y TAMAÑO
+        self.etiqueta_contador.setFont(QFont("Linux Biolinum G",12))    #AGREGAR FUENTE Y TAMAÑO
         #--------------------------------------------------------------------------------------#
     
         #---------------------------------CONTENEDORES-----------------------------------------#
